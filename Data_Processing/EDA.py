@@ -13,9 +13,9 @@ class DataProcessor:
         self.train_data = None
         self.test_data = None
 
-    def load_data(self):
+    def load_data(self, sep='\t', header=None, names=['label', 'message']):
         """Load data from a CSV file."""
-        self.data = pd.read_csv(self.data_path)
+        self.data = pd.read_csv(self.data_path, sep=sep, header=header, names=names)
         print("Data loaded successfully.")
 
     def preprocess_data(self):
