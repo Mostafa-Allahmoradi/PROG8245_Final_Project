@@ -1,9 +1,12 @@
-# Data handling
-from pyclbr import Class
 import pandas as pd
 import numpy as np
-from nltk.corpus import stopwords
 import string
+
+import nltk
+# Download necessary NLTK data
+# nltk.download('stopwords', quiet=True)
+# nltk.download('punkt', quiet=True)
+from nltk.corpus import stopwords
 
 # Train-test split
 from sklearn.model_selection import train_test_split
