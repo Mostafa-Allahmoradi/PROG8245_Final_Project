@@ -333,3 +333,114 @@ class Visualizer:
             print(f"Figure saved to: {save_path}")
         
         return fig
+    
+    def plot_distribution_comparison(self, data, feature, label_col='label', 
+                                  labels=['ham', 'spam'], bins=30, save_path=None):
+        """
+        Plot distribution comparison of a feature across different classes.
+        
+        Args:
+            data: DataFrame containing the data.
+            feature: Feature column name to plot.
+            label_col: Column name for class labels.
+            labels: List of class labels to compare.
+            bins: Number of bins for the histogram.
+            save_path: If provided, saves the figure to this path.
+            
+        Returns:
+            matplotlib.figure.Figure: The figure object.
+        """
+        fig, ax = plt.subplots(figsize=self.figsize)
+        
+        for label in labels:
+            subset = data[data[label_col] == label]
+            sns.histplot(subset[feature], bins=bins, kde=True, label=label, ax=ax, stat='density', alpha=0.6)
+        
+        ax.set_xlabel(feature.replace('_', ' ').title(), fontsize=12)
+        ax.set_ylabel('Density', fontsize=12)
+        ax.set_title(f'Distribution of {feature.replace("_", " ").title()} by Class', fontsize=14, fontweight='bold')
+        ax.legend(title='Class')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print(f"Figure saved to: {save_path}")
+        
+        return fig
+    
+    def plot_histogram(self, data, feature, bins=30, title='Histogram', xlabel=None, ylabel='Frequency', 
+                   color='steelblue', save_path=None):
+        """
+        Plot a histogram for a given feature.
+        """
+        # Use subplots to create fig and ax explicitly
+        fig, ax = plt.subplots(figsize=(6, 4))
+        
+        sns.histplot(x=feature, data=data, bins=bins, color=color, ax=ax)
+        
+        # Set labels on the axes object
+        ax.set_title(title)
+        ax.set_ylabel(ylabel)
+        if xlabel:
+            ax.set_xlabel(xlabel)
+
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print(f"Figure saved to: {save_path}")
+        
+        return fig
+    
+    def plot_heatmap(self, pivot_table, x_label, y_label, title='Heatmap', cmap='YlGnBu', save_path=None):
+        """
+        Plot a heatmap for given x and y axes with values.
+        """
+        
+        fig, ax = plt.subplots(figsize=(15, 8))
+        
+        sns.heatmap(pivot_table, annot=True, cmap='YlGnBu', cbar=True, fmt='.2f', ax=ax)
+        
+        ax.set_title(title)
+        ax.set_xlabel(x_label)
+        ax.set_ylabel(y_label)
+
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print(f"Figure saved to: {save_path}")
+        
+        return fig
+    
+    def plot_idf_distribution(self, idf_values, title='Distribution of IDF Weights', 
+                              xlabel='IDF Weight', ylabel='Frequency', bins=30, save_path=None):
+        """
+        Plot the distribution of IDF weights.
+        
+        Args:
+            idf_values: Array-like of IDF weights.
+            title: Plot title.
+            xlabel: X-axis label.
+            ylabel: Y-axis label.
+            bins: Number of bins for the histogram.
+            save_path: If provided, saves the figure to this path.
+            
+        Returns:
+            matplotlib.figure.Figure: The figure object.
+        """
+
+        fig, ax = plt.subplots(figsize=(11, 8))
+        
+        sns.histplot(idf_values, bins=bins, kde=True, color='steelblue', ax=ax)
+        
+        ax.set_xlabel(xlabel, fontsize=12)
+        ax.set_ylabel(ylabel, fontsize=12)
+        ax.set_title(title, fontsize=14, fontweight='bold')
+        ax.grid(True, alpha=0.3)
+        
+        plt.tight_layout()
+        
+        if save_path:
+            plt.savefig(save_path, dpi=300, bbox_inches='tight')
+            print(f"Figure saved to: {save_path}")
+        
+        return fig
