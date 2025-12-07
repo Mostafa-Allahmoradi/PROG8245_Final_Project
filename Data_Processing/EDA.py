@@ -3,10 +3,12 @@ import numpy as np
 import string
 
 import nltk
-# Download necessary NLTK data
-# nltk.download('stopwords', quiet=True)
-# nltk.download('punkt', quiet=True)
 from nltk.corpus import stopwords
+# Ensure NLTK resources are available
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords', quiet=True)
 
 # Train-test split
 from sklearn.model_selection import train_test_split
@@ -45,7 +47,7 @@ class DataProcessor:
     
     def feature_engineering(self):
         """Apply text preprocessing to the entire dataset."""
-        
+
         # Apply text preprocessing
         self.data['cleaned_message'] = self.data['message'].apply(self.preprocess_text)
 
