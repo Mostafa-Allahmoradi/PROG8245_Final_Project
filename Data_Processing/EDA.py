@@ -42,10 +42,19 @@ class DataProcessor:
         
         # Join back into a string (optional, depending on next steps)
         return " ".join(clean_words)
-
-    def split_data(self, test_size=0.2, random_state=42):
-        """Split the data into training and testing sets."""
-        self.train_data, self.test_data = train_test_split(self.data, test_size=test_size, random_state=random_state)
-        print(f"Data split into training and testing sets with test size = {test_size} and random state = {random_state}.")
+    
+    def feature_engineering(self):
+        """Apply text preprocessing to the entire dataset."""
         
-        return self.train_data, self.test_data
+        # Apply text preprocessing
+        self.data['cleaned_message'] = self.data['message'].apply(self.preprocess_text)
+
+        # Add a feature for 'message length' to see if it varies by class
+        self.data['message_len'] = self.data['message'].apply(len)
+
+    def data_balancing(self):
+        """Check and handle class imbalance if necessary."""
+        
+        ham_indices = self.data[self.data['label'] == 'ham'].index
+        self.data = self.data.drop(ham_indices[:3572])  # Drop first 3572 ham messages
+          
