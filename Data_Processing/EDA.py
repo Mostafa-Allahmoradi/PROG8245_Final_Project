@@ -2,6 +2,8 @@
 from pyclbr import Class
 import pandas as pd
 import numpy as np
+from nltk.corpus import stopwords
+import string
 
 # Train-test split
 from sklearn.model_selection import train_test_split
@@ -18,19 +20,25 @@ class DataProcessor:
         self.data = pd.read_csv(self.data_path, sep=sep, header=header, names=names)
         print("Data loaded successfully.")
 
-    def preprocess_data(self):
-        """Preprocess the data by handling missing values, handling duplicate rows, and encoding categorical variables."""
-        # Handle missing values
-        self.data.fillna(self.data.mean(), inplace=True)
-
-        # Handle duplicate rows
-        self.data.drop_duplicates(inplace=True)
-
-        # Encode categorical variables
-        # categorical_cols = self.data.select_dtypes(include=['object']).columns
-        # self.data = pd.get_dummies(self.data, columns=categorical_cols, drop_first=True)
+    def preprocess_text(self, message):
+        """
+        1. Removes punctuation
+        2. Converts to lowercase
+        3. Removes stopwords (common words like 'the', 'is', 'and')
+        """
+        # Remove Punctuation
+        no_punc = [char for char in message if char not in string.punctuation]
+        no_punc = ''.join(no_punc)
         
-        print("Data preprocessing completed.")
+        # Convert to lower case and split into words
+        words = no_punc.lower().split()
+        
+        # Remove Stopwords
+        stop_words = set(stopwords.words('english'))
+        clean_words = [word for word in words if word not in stop_words]
+        
+        # Join back into a string (optional, depending on next steps)
+        return " ".join(clean_words)
 
     def split_data(self, test_size=0.2, random_state=42):
         """Split the data into training and testing sets."""
