@@ -55,8 +55,14 @@ class DataProcessor:
         self.data['message_len'] = self.data['message'].apply(len)
 
     def data_balancing(self):
-        """Check and handle class imbalance if necessary."""
+        """Downsample majority class (ham) to match minority class (spam)"""
+        spam_data = self.data[self.data['label'] == 'spam']
+        ham_data = self.data[self.data['label'] == 'ham']
         
-        ham_indices = self.data[self.data['label'] == 'ham'].index
-        self.data = self.data.drop(ham_indices[:3572])  # Drop first 3572 ham messages
+        # Randomly sample ham to match spam count
+        ham_downsampled = ham_data.sample(n=len(spam_data), random_state=42)
+        
+        # Combine and shuffle
+        self.data = pd.concat([spam_data, ham_downsampled]).sample(frac=1, random_state=42).reset_index(drop=True)
+        print("Data balanced via random downsampling.")
           
